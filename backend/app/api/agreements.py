@@ -10,6 +10,7 @@ from app.config import settings
 from app.schemas.agreement import (
     AgreementUploadResponse,
     CalculationResponse,
+    CertificateRequest,
     CovenantResult,
     ExtractionRequest,
     FinancialDataInput,
@@ -107,6 +108,17 @@ async def extract_covenants(request: ExtractionRequest):
                 detail=f"Extraction failed: {extraction_result.get('error', 'Unknown error')}",
             )
 
+        # Save extracted covenants for use in /calculate
+        from app.services.covenant_store import save_covenants
+
+        save_covenants(
+            request.agreement_id,
+            {
+                "ebitda_definition": extraction_result.get("ebitda_definition"),
+                "covenants": extraction_result.get("covenants", []),
+            },
+        )
+
         return {
             "agreement_id": request.agreement_id,
             "extraction_time": datetime.utcnow().isoformat(),
@@ -193,8 +205,27 @@ async def generate_code(request: ExtractionRequest):
 
 @router.post("/calculate", response_model=CalculationResponse)
 async def calculate_covenants(data: FinancialDataInput):
-    """Calculate covenant compliance from financial data."""
+    """Calculate covenant compliance from financial data using extracted limits."""
+    from app.services.covenant_store import get_covenant_limits
+
     try:
+        # Fetch dynamic limits from extracted covenants
+        limits = get_covenant_limits(data.agreement_id)
+
+        # Use extracted limits or fall back to defaults
+        senior_limit = limits.get("senior_leverage", {}).get("value", 6.75)
+        super_senior_limit = limits.get("super_senior_leverage", {}).get("value", 7.50)
+        dscr_limit = limits.get("dscr", {}).get("value", 1.00)
+
+        senior_section = limits.get("senior_leverage", {}).get(
+            "section", "Section 24.2(a)"
+        )
+        super_senior_section = limits.get("super_senior_leverage", {}).get(
+            "section", "Section 24.2(b)"
+        )
+        dscr_section = limits.get("dscr", {}).get("section", "Section 24.2(c)")
+
+        # Calculate EBITDA
         ebitda = (
             data.consolidated_ebit
             + data.depreciation
@@ -212,26 +243,26 @@ async def calculate_covenants(data: FinancialDataInput):
             CovenantResult(
                 name="Senior Leverage Ratio",
                 value=round(senior_leverage, 2),
-                limit=6.75,
+                limit=senior_limit,
                 limit_type="max",
-                compliant=senior_leverage <= 6.75,
-                section_ref="Section 24.2(a)",
+                compliant=senior_leverage <= senior_limit,
+                section_ref=senior_section,
             ),
             CovenantResult(
                 name="Total Leverage Ratio (Super Senior)",
                 value=round(total_leverage, 2),
-                limit=7.50,
+                limit=super_senior_limit,
                 limit_type="max",
-                compliant=total_leverage <= 7.50,
-                section_ref="Section 24.2(b)",
+                compliant=total_leverage <= super_senior_limit,
+                section_ref=super_senior_section,
             ),
             CovenantResult(
                 name="Debt Service Coverage Ratio",
                 value=round(dscr, 2),
-                limit=1.00,
+                limit=dscr_limit,
                 limit_type="min",
-                compliant=dscr >= 1.00,
-                section_ref="Section 24.2(c)",
+                compliant=dscr >= dscr_limit,
+                section_ref=dscr_section,
             ),
         ]
 
@@ -282,3 +313,26 @@ async def download_agreement(agreement_id: str):
         status_code=501,
         detail="Download endpoint not implemented.",
     )
+
+
+@router.post("/certificate")
+async def generate_compliance_certificate(request: CertificateRequest):
+    """Generate a PDF compliance certificate based on calculation results."""
+    from fastapi.responses import Response
+
+    from app.services.certificate_service import generate_certificate
+
+    try:
+        pdf_bytes = generate_certificate(request.dict())
+
+        filename = f"Compliance_Certificate_{request.company_name.replace(' ', '_')}_{request.test_date.replace(' ', '_')}.pdf"
+
+        return Response(
+            content=pdf_bytes,
+            media_type="application/pdf",
+            headers={"Content-Disposition": f"attachment; filename={filename}"},
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to generate certificate: {str(e)}"
+        )

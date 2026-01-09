@@ -238,6 +238,49 @@ class CalculationResponse(BaseModel):
     )
 
     # Trace data for audit
+    # Trace data for audit
     trace: dict = Field(
         default_factory=dict, description="Full calculation trace with contract refs"
     )
+
+
+# ============================================
+# Certificate Generation Schema
+# ============================================
+
+
+class CertificateRequest(BaseModel):
+    """
+    Request to generate a compliance certificate PDF.
+    """
+
+    agreement_id: str
+    company_name: str = Field(..., description="Name of the Borrower/Company")
+    agent_name: str = Field(..., description="Name of the Facility Agent")
+    agreement_date: str = Field(..., description="Date of the Facilities Agreement")
+    test_date: str = Field(..., description="Date of the Testing Period end")
+
+    # Financial data (could be populated from calculation result)
+    leverage_ratio: float = Field(..., description="Calculated Leverage Ratio")
+    leverage_limit: float = Field(..., description="Leverage Ratio Limit")
+    compliant: bool = Field(..., description="Whether the covenant is compliant")
+
+    # Signature input
+    signature_image: Optional[str] = Field(
+        None, description="Base64 encoded signature image"
+    )
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "agreement_id": "agreements/8bcbbc67_aggrementdemo.pdf",
+                "company_name": "Ultra Electronics Holdings plc",
+                "agent_name": "Barclays Bank PLC",
+                "agreement_date": "24 December 2021",
+                "test_date": "31 December 2025",
+                "leverage_ratio": 3.51,
+                "leverage_limit": 6.75,
+                "compliant": True,
+                "signature_image": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=",
+            }
+        }
