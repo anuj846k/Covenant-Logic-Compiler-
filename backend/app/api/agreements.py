@@ -3,8 +3,10 @@
 import re
 import uuid
 from datetime import datetime
+from typing import List, Optional
 
 from fastapi import APIRouter, File, HTTPException, UploadFile
+from pydantic import BaseModel
 
 from app.config import settings
 from app.schemas.agreement import (
@@ -16,6 +18,7 @@ from app.schemas.agreement import (
     FinancialDataInput,
     GeneratedCodeResponse,
 )
+from app.services import agreement_storage
 from app.services.pdf_service import PDFService
 from app.services.s3_service import S3Service
 
@@ -23,6 +26,11 @@ router = APIRouter()
 
 s3_service = S3Service()
 pdf_service = PDFService()
+
+
+class ManualCovenantUpdate(BaseModel):
+    covenants: List[dict]
+    ebitda_definition: Optional[dict] = None
 
 
 @router.post("/upload", response_model=AgreementUploadResponse)
@@ -50,6 +58,10 @@ async def upload_agreement(
         s3_key = s3_service.upload_file(
             file_content=contents, original_filename=file.filename, folder="agreements"
         )
+
+        # Store the mapping of agreement_id -> s3_key
+        agreement_storage.save_s3_key(agreement_id, s3_key)
+
         page_count = pdf_service.get_page_count(contents)
         definitions = pdf_service.extract_definitions_section(contents)
 
@@ -78,7 +90,9 @@ async def extract_covenants(request: ExtractionRequest):
     from app.services.rag_service import RAGService
 
     try:
-        pdf_bytes = s3_service.download_file(request.agreement_id)
+        # Get the correct S3 key for this agreement
+        s3_key = agreement_storage.get_s3_key(request.agreement_id)
+        pdf_bytes = s3_service.download_file(s3_key)
         full_text = pdf_service.extract_text_from_bytes(pdf_bytes)
 
         rag = RAGService()
@@ -136,6 +150,46 @@ async def extract_covenants(request: ExtractionRequest):
         )
 
 
+@router.put("/covenants/{agreement_id}")
+async def update_covenants(agreement_id: str, update_data: ManualCovenantUpdate):
+    """Update covenant and EBITDA data after manual human editing.
+
+    This endpoint allows users to manually correct AI-extracted data,
+    implementing human-in-the-loop oversight for enterprise compliance.
+    """
+    from app.services.covenant_store import get_covenants, save_covenants
+
+    try:
+        # Get existing extraction data (defensive: handle misses)
+        existing_data = get_covenants(agreement_id) or {}
+
+        # Update the data with manually edited values
+        updated_data = {
+            **existing_data,
+            "covenants": update_data.covenants,
+        }
+
+        if update_data.ebitda_definition:
+            updated_data["ebitda_definition"] = update_data.ebitda_definition
+
+        # Save the updated data
+        save_covenants(agreement_id, updated_data)
+
+        return {
+            "agreement_id": agreement_id,
+            "updated_at": datetime.utcnow().isoformat(),
+            "covenants_count": len(update_data.covenants),
+            "message": "Covenants updated successfully",
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(
+            status_code=500, detail=f"Failed to update covenants: {str(e)}"
+        )
+
+
 @router.post("/generate-code", response_model=GeneratedCodeResponse)
 async def generate_code(request: ExtractionRequest):
     """Generate executable Python code from extracted covenant definitions."""
@@ -146,7 +200,9 @@ async def generate_code(request: ExtractionRequest):
     from app.services.rag_service import RAGService
 
     try:
-        pdf_bytes = s3_service.download_file(request.agreement_id)
+        # Get the correct S3 key for this agreement
+        s3_key = agreement_storage.get_s3_key(request.agreement_id)
+        pdf_bytes = s3_service.download_file(s3_key)
         full_text = pdf_service.extract_text_from_bytes(pdf_bytes)
 
         rag = RAGService()
