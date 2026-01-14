@@ -414,21 +414,12 @@ export function ExtractStep({
                             {editingCovenant === index ? (
                               <Input
                                 type="text"
-                                value={
-                                  covenantLimit === 0 &&
-                                  editingCovenant === index
-                                    ? ""
-                                    : covenantLimit
-                                }
+                                value={covenant.limit_value ?? ""}
                                 onChange={(e) => {
                                   const val = e.target.value;
                                   // Allow empty string or numbers/decimals
                                   if (val === "" || /^\d*\.?\d*$/.test(val)) {
-                                    onUpdateCovenant(
-                                      index,
-                                      "limit_value",
-                                      val === "" ? 0 : val
-                                    );
+                                    onUpdateCovenant(index, "limit_value", val);
                                   }
                                 }}
                                 className="h-8 w-24 bg-transparent border-cyan-500/50 font-mono text-cyan-400"
@@ -436,7 +427,7 @@ export function ExtractStep({
                               />
                             ) : (
                               <span className="text-cyan-400 font-mono font-bold">
-                                {Number(covenantLimit).toFixed(2)}x
+                                {Number(covenant.limit_value || 0).toFixed(2)}x
                               </span>
                             )}
                           </TableCell>

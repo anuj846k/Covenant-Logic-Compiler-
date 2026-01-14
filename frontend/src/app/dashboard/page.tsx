@@ -85,8 +85,21 @@ export default function DashboardPage() {
     setLoading(true);
     setError("");
 
+    // Sanitize data: ensure all numeric fields are actually numbers
+    const sanitizedData = {
+      ...financialData,
+      consolidated_ebit: Number(financialData.consolidated_ebit),
+      depreciation: Number(financialData.depreciation),
+      amortisation: Number(financialData.amortisation),
+      impairment_costs: Number(financialData.impairment_costs),
+      senior_debt: Number(financialData.senior_debt),
+      total_debt: Number(financialData.total_debt),
+      interest_expense: Number(financialData.interest_expense),
+      principal_payments: Number(financialData.principal_payments),
+    };
+
     try {
-      const response = await api.calculateCovenants(financialData);
+      const response = await api.calculateCovenants(sanitizedData);
       setCalculationResult(response);
       setActiveTab("results");
     } catch (err) {
@@ -159,10 +172,16 @@ export default function DashboardPage() {
   const saveCovenantsToBackend = async () => {
     if (!extractionData || !agreementData) return;
 
+    // Sanitize covenants: ensure limit_value is a number
+    const sanitizedCovenants = extractionData.covenants.map((cov) => ({
+      ...cov,
+      limit_value: Number(cov.limit_value || 0),
+    }));
+
     try {
       await api.updateCovenants(
         agreementData.agreement_id,
-        extractionData.covenants,
+        sanitizedCovenants,
         extractionData.ebitda_definition
       );
       // Now it's truly persisted!

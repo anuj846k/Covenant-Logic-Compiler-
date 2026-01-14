@@ -14,7 +14,7 @@ import { Calculator as CalculatorIcon, Loader2 } from "lucide-react";
 interface CalculateStepProps {
   financialData: api.FinancialDataInput;
   loading: boolean;
-  onUpdateFinancialData: (field: string, value: number) => void;
+  onUpdateFinancialData: (field: string, value: string | number) => void;
   onCalculate: () => void;
 }
 
@@ -58,13 +58,18 @@ export function CalculateStep({
               <Label htmlFor={item.id}>{item.label}</Label>
               <Input
                 id={item.id}
-                type="number"
+                type="text"
                 value={
-                  financialData[item.field as keyof api.FinancialDataInput]
+                  financialData[item.field as keyof api.FinancialDataInput] ??
+                  ""
                 }
-                onChange={(e) =>
-                  onUpdateFinancialData(item.field, Number(e.target.value))
-                }
+                onChange={(e) => {
+                  const val = e.target.value;
+                  if (val === "" || /^\d*\.?\d*$/.test(val)) {
+                    onUpdateFinancialData(item.field, val);
+                  }
+                }}
+                className="font-mono text-cyan-400 bg-white/5 border-white/10"
               />
             </div>
           ))}

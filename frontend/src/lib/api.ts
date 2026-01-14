@@ -36,7 +36,7 @@ export interface EBITDADefinition {
 
 export interface CovenantDefinition {
   name: string;
-  limit_value: number;
+  limit_value: string | number;
   limit_type: string;
   formula?: string;
   legal_text?: string;
@@ -85,14 +85,14 @@ export interface CalculationResponse {
 
 export interface FinancialDataInput {
   agreement_id: string;
-  consolidated_ebit: number;
-  depreciation: number;
-  amortisation: number;
-  impairment_costs: number;
-  senior_debt: number;
-  total_debt: number;
-  interest_expense: number;
-  principal_payments: number;
+  consolidated_ebit: string | number;
+  depreciation: string | number;
+  amortisation: string | number;
+  impairment_costs: string | number;
+  senior_debt: string | number;
+  total_debt: string | number;
+  interest_expense: string | number;
+  principal_payments: string | number;
 }
 
 export async function uploadAgreement(
