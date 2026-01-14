@@ -12,6 +12,9 @@ const monaSans = Mona_Sans({
 
 export const metadata: Metadata = {
   title: "Axiom | AI-Powered Covenant Logic Compiler",
+  icons:{
+    icon:"/logo.png"
+  },
   description:
     "Transform legal covenant definitions into executable Python code. Eliminate 49+ hours of manual work per loan quarter with AI-powered compliance automation.",
   keywords: [

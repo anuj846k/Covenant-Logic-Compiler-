@@ -64,12 +64,12 @@ export function Footer() {
       <div className="grid w-full gap-8 xl:grid-cols-3 xl:gap-8">
         <AnimatedContainer className="space-y-4">
           <div className="flex items-center gap-3">
-            <div className="relative w-10 h-10 border-2 border-[#A4F1F5] rounded-full">
+            <div className="relative w-11 h-11 border-2 border-[#A4F1F5] rounded-full">
               <Image
                 src="/logo.png"
                 alt="Axiom Logo"
                 fill
-                className="object-contain rounded-full"
+                className="object-contain rounded-full scale-150"
               />
             </div>
             <span className="font-bold text-xl tracking-tight">Axiom</span>

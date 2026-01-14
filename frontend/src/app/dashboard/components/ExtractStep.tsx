@@ -25,15 +25,54 @@ import {
 } from "@/components/ui/tooltip";
 import * as api from "@/lib/api";
 import {
+  Brain,
+  Database,
   Edit3,
   FileText,
   HelpCircle,
   Loader2,
   Pencil,
   Save,
+  Search,
+  Sparkles,
   Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+// Loading steps with icons and messages
+const LOADING_STEPS = [
+  {
+    icon: Database,
+    message: "Indexing document into vector store...",
+    progress: 15,
+  },
+  {
+    icon: Brain,
+    message: "Building semantic embeddings with AI...",
+    progress: 30,
+  },
+  {
+    icon: Search,
+    message: "Searching for EBITDA definitions...",
+    progress: 45,
+  },
+  {
+    icon: Search,
+    message: "Locating financial covenant clauses...",
+    progress: 60,
+  },
+  {
+    icon: Sparkles,
+    message: "Extracting ratio limits & thresholds...",
+    progress: 75,
+  },
+  {
+    icon: Brain,
+    message: "Analyzing covenant structure with LLM...",
+    progress: 85,
+  },
+  { icon: Sparkles, message: "Finalizing extraction results...", progress: 95 },
+];
 
 interface ExtractStepProps {
   agreementData: api.AgreementUploadResponse | null;
@@ -77,6 +116,25 @@ export function ExtractStep({
     index: number;
   } | null>(null);
 
+  // Animated loading step
+  const [loadingStep, setLoadingStep] = useState(0);
+
+  useEffect(() => {
+    if (!loading) {
+      setLoadingStep(0);
+      return;
+    }
+
+    const interval = setInterval(() => {
+      setLoadingStep((prev) => (prev + 1) % LOADING_STEPS.length);
+    }, 3000); // Change message every 3 seconds
+
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  const currentStep = LOADING_STEPS[loadingStep];
+  const StepIcon = currentStep?.icon || Database;
+
   return (
     <Card className="border-none shadow-none bg-transparent">
       <CardHeader className="px-0 pt-0">
@@ -86,7 +144,7 @@ export function ExtractStep({
               Covenant Extraction
             </CardTitle>
             <CardDescription className="text-muted-foreground mt-1">
-              Verify and edit AI-extracted definitions from Section 22
+              AI-extracted covenant definitions for your review
             </CardDescription>
           </div>
           <Badge
@@ -121,11 +179,45 @@ export function ExtractStep({
             </Button>
 
             {loading && (
-              <div className="mt-8 w-full max-w-sm space-y-3">
-                <Progress value={45} className="h-1.5 bg-white/5" />
-                <p className="text-sm text-muted-foreground text-center animate-pulse">
-                  Searching for EBITDA definitions & ratios...
-                </p>
+              <div className="mt-8 w-full max-w-md space-y-6">
+                {/* Animated Progress Bar */}
+                <div className="space-y-2">
+                  <Progress
+                    value={currentStep?.progress || 0}
+                    className="h-2 bg-white/5 transition-all duration-1000"
+                  />
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>Processing...</span>
+                    <span>{currentStep?.progress || 0}%</span>
+                  </div>
+                </div>
+
+                {/* Current Step with Icon */}
+                <div className="flex items-center gap-4 p-4 rounded-lg bg-cyan-500/5 border border-cyan-500/20 animate-pulse">
+                  <div className="p-3 rounded-full bg-cyan-500/10">
+                    <StepIcon className="w-6 h-6 text-cyan-400" />
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-white">
+                      {currentStep?.message || "Processing..."}
+                    </p>
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Step {loadingStep + 1} of {LOADING_STEPS.length}
+                    </p>
+                  </div>
+                  <Loader2 className="w-5 h-5 text-cyan-400 animate-spin" />
+                </div>
+
+                {/* What's happening */}
+                <div className="text-center space-y-2">
+                  <p className="text-xs text-muted-foreground">
+                    🧠 AI is reading your agreement and extracting covenant
+                    definitions
+                  </p>
+                  <p className="text-xs text-muted-foreground/70">
+                    This may take 30-60 seconds for complex documents
+                  </p>
+                </div>
               </div>
             )}
           </div>

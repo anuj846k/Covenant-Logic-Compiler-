@@ -36,12 +36,12 @@ export function Navbar() {
           className="flex items-center gap-2.5 focus-ring rounded-lg group"
           aria-label="Axiom - Home"
         >
-          <div className="relative w-10 h-10 transition-transform group-hover:scale-105 border-2 border-[#A4F1F5] rounded-full">
+          <div className="relative w-11 h-11 transition-transform group-hover:scale-105 border-2 border-[#A4F1F5] rounded-full">
             <Image
               src="/logo.png"
               alt="Axiom Logo"
               fill
-              className="object-contain rounded-full"
+              className="object-contain rounded-full scale-150"
             />
           </div>
           <span className="font-bold text-xl tracking-tight text-foreground">

@@ -24,9 +24,14 @@ agno==2.3.21
 # AWS
 boto3==1.42.21
 
-# RAG - Vector Store & Embeddings (all free, runs locally)
-chromadb==0.4.22
-sentence-transformers==2.2.2
+# RAG - Vector Store & Embeddings (using local working versions)
+chromadb==1.4.0
+sentence-transformers==5.2.0
+transformers==4.57.3
+torch==2.9.1
 
 # Groq LLM
 groq==1.0.0
+
+# PDF Certificate Generation
+reportlab
