@@ -1,14 +1,14 @@
-# 🏦 Covenant Logic Compiler
+# Covenant Logic Compiler
 
 ### AI that turns legal loan agreements into automated compliance calculations
 
 > **One sentence:** We convert covenant definitions from LMA loan agreements into executable code that automatically calculates compliance—eliminating 49 hours of manual Excel work per loan, per quarter.
 
-[![Live Demo](https://img.shields.io/badge/🚀_Live_Demo-Click_Here-brightgreen?style=for-the-badge)](https://covenant-api-609382621286.asia-south1.run.app/docs)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Click_Here-brightgreen?style=for-the-badge)](https://covenant-api-609382621286.asia-south1.run.app/docs)
 
 ---
 
-## 📺 Demo Video
+## Demo Video
 
 > _Watch the 3-minute walkthrough showing the complete flow_
 
@@ -16,7 +16,7 @@
 
 ---
 
-## 🖼️ The Transformation
+## The Transformation
 
 ![Problem vs Solution](docs/problem_solution.png)
 
@@ -24,13 +24,13 @@ _From 49 hours of manual Excel work to 10 minutes of automated compliance._
 
 ---
 
-## 🔄 User Flow
+## User Flow
 
 ![6-Step User Flow](docs/user_flow.png)
 
 ---
 
-## 🎯 The Problem We Solve
+## The Problem We Solve
 
 ### The "Logic-to-Code Gap" in Covenant Monitoring
 
@@ -45,7 +45,7 @@ When a **$1 billion syndicated loan** is issued across 15 banks, someone must mo
 | **15 Participant Banks** | Each recalculates independently           | 3 hours each = 45 hours |
 | **Total**                | Duplicated manual work                    | **49 hours per loan**   |
 
-> 💡 _This is called "stare and compare"—analysts stare at PDFs and Excel sheets, manually translating legal text into formulas._
+> _This is called "stare and compare"—analysts stare at PDFs and Excel sheets, manually translating legal text into formulas._
 
 **The real problem isn't bad UX or missing dashboards.**
 
@@ -65,7 +65,7 @@ This translation happens **manually, for every loan, every quarter.** It's slow,
 
 ---
 
-## 💡 Our Solution
+## Our Solution
 
 ### AI reads the contract. AI writes the code. Humans verify and sign.
 
@@ -85,13 +85,13 @@ This translation happens **manually, for every loan, every quarter.** It's slow,
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-### 1️⃣ Smart Document Upload
+### 1. Smart Document Upload
 
 Upload any LMA-standard loan agreement PDF. Our AI finds Section 22 (Definitions) and extracts all covenant clauses automatically.
 
-### 2️⃣ AI Covenant Extraction
+### 2. AI Covenant Extraction
 
 We use RAG (Retrieval-Augmented Generation) to understand complex covenant definitions including:
 
@@ -100,7 +100,7 @@ We use RAG (Retrieval-Augmented Generation) to understand complex covenant defin
 - Interest Coverage and Fixed Charge Coverage
 - CapEx limits and other financial covenants
 
-### 3️⃣ Automatic Code Generation
+### 3. Automatic Code Generation
 
 The AI converts legal definitions into executable Python code. No more Excel formula errors. The code is:
 
@@ -108,17 +108,17 @@ The AI converts legal definitions into executable Python code. No more Excel for
 - **Deterministic** — Same inputs = same outputs, always
 - **Shareable** — All syndicate members use identical calculations
 
-### 4️⃣ Real-Time Compliance Testing
+### 4. Real-Time Compliance Testing
 
 Input your quarterly financials and get instant pass/fail results with detailed breakdowns for each covenant.
 
-### 5️⃣ LMA-Compliant Certificate Generation
+### 5. LMA-Compliant Certificate Generation
 
 Generate professional, audit-ready compliance certificates in the exact format required by Schedule 8 of LMA agreements. Ready for digital signature and submission.
 
 ---
 
-## 🔍 Why Current Solutions Don't Work
+## Why Current Solutions Don't Work
 
 | Competitor     | What They Do                   | What's Missing                                |
 | :------------- | :----------------------------- | :-------------------------------------------- |
@@ -130,7 +130,7 @@ Generate professional, audit-ready compliance certificates in the exact format r
 
 ---
 
-## 💰 Commercial Viability
+## Commercial Viability
 
 | Metric              | Value                                             |
 | :------------------ | :------------------------------------------------ |
@@ -148,7 +148,7 @@ Generate professional, audit-ready compliance certificates in the exact format r
 
 ---
 
-## 👥 Target Users
+## Target Users
 
 | User                    | Pain Point                               | How We Help                          |
 | :---------------------- | :--------------------------------------- | :----------------------------------- |
@@ -159,7 +159,7 @@ Generate professional, audit-ready compliance certificates in the exact format r
 
 ---
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 | Layer              | Technology                                                  |
 | :----------------- | :---------------------------------------------------------- |
@@ -172,7 +172,7 @@ Generate professional, audit-ready compliance certificates in the exact format r
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ![System Architecture](docs/architecture.png)
 
@@ -180,7 +180,7 @@ _How the components work together to transform legal agreements into automated c
 
 ---
 
-## 🌐 Live URLs
+## Live URLs
 
 | Component             | URL                                                        |
 | :-------------------- | :--------------------------------------------------------- |
@@ -190,7 +190,7 @@ _How the components work together to transform legal agreements into automated c
 
 ---
 
-## 🚀 How It Works (User Flow)
+## How It Works (User Flow)
 
 ### Step 1: Upload Agreement
 
@@ -218,7 +218,7 @@ Review results, apply your digital signature, and download a professional PDF co
 
 ---
 
-## 📊 Example: How We Solve the "EBITDA Problem"
+## Example: How We Solve the "EBITDA Problem"
 
 ### The Challenge
 
@@ -253,7 +253,7 @@ def calculate_ebitda(operating_profit, depreciation, amortization,
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 lmahack/
@@ -272,7 +272,7 @@ lmahack/
 
 ---
 
-## 🏆 LMA Edge Hackathon
+## LMA Edge Hackathon
 
 **Category:** Keeping Loans on Track
 
@@ -280,19 +280,35 @@ This project directly addresses the core challenge of the "Keeping Loans on Trac
 
 ---
 
-## 👨‍💻 Quick Start (For Developers)
+## Quick Start (For Developers)
+
+### 1. Backend Setup
 
 ```bash
-# Backend
 cd backend
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
 
-# Frontend
+# Create .env file with the following:
+# GROQ_API_KEY=your_groq_key
+# AWS_ACCESS_KEY_ID=your_aws_key
+# AWS_SECRET_ACCESS_KEY=your_aws_secret
+# AWS_REGION=ap-south-1
+# AWS_S3_BUCKET_NAME=your_bucket_name
+
+uvicorn app.main:app --reload --port 8000
+```
+
+### 2. Frontend Setup
+
+```bash
 cd frontend
 pnpm install
+
+# Create .env.local with:
+# NEXT_PUBLIC_API_URL=http://localhost:8000/api/v1/agreements
+
 pnpm dev
 ```
 
@@ -306,7 +322,7 @@ MIT
 
 ---
 
-## 🙋 Team
+## Team
 
 Built with ❤️ for the LMA Edge Hackathon 2026
 
