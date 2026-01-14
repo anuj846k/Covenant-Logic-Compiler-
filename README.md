@@ -4,21 +4,19 @@
 
 > **One sentence:** We convert covenant definitions from LMA loan agreements into executable code that automatically calculates compliance—eliminating 49 hours of manual Excel work per loan, per quarter.
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Click_Here-brightgreen?style=for-the-badge)](https://covenant-api-609382621286.asia-south1.run.app/docs)
-
 ---
 
 ## Demo Video
 
 > _Watch the 3-minute walkthrough showing the complete flow_
 
-[▶️ Watch Demo Video](YOUR_VIDEO_LINK_HERE)
+[▶️ Watch Demo Video](https://www.youtube.com/watch?v=FyMN-1vFjV0&t=59s)
 
 ---
 
 ## The Transformation
 
-![Problem vs Solution](docs/problem_solution.png)
+<img src="https://res.cloudinary.com/ddtpuif2p/image/upload/v1768409720/problem_solution_vastpf.jpg" height="250" alt="Problem vs Solution">
 
 _From 49 hours of manual Excel work to 10 minutes of automated compliance._
 
@@ -26,7 +24,7 @@ _From 49 hours of manual Excel work to 10 minutes of automated compliance._
 
 ## User Flow
 
-![6-Step User Flow](docs/user_flow.png)
+<img src="https://res.cloudinary.com/ddtpuif2p/image/upload/v1768409719/user_flow_yd8ixx.jpg" height="250" alt="6-Step User Flow">
 
 ---
 
@@ -118,18 +116,6 @@ Generate professional, audit-ready compliance certificates in the exact format r
 
 ---
 
-## Why Current Solutions Don't Work
-
-| Competitor     | What They Do                   | What's Missing                                |
-| :------------- | :----------------------------- | :-------------------------------------------- |
-| **Cardo AI**   | Data storage, field extraction | Humans still encode covenant logic manually   |
-| **Moody's**    | Workflows and templates        | Covenants are too bespoke for templates       |
-| **BankStride** | Reminders, document collection | Trusts borrower's certificate, doesn't verify |
-
-**Our difference:** We don't just help humans work faster—we eliminate the translation step entirely.
-
----
-
 ## Commercial Viability
 
 | Metric              | Value                                             |
@@ -165,7 +151,7 @@ Generate professional, audit-ready compliance certificates in the exact format r
 | :----------------- | :---------------------------------------------------------- |
 | **Frontend**       | Next.js 14, TypeScript, Tailwind CSS, Shadcn UI             |
 | **Backend**        | FastAPI (Python), Pydantic                                  |
-| **AI/ML**          | Groq Llama 3.3 (LLM), Sentence Transformers, ChromaDB (RAG) |
+| **AI/ML**          | Groq Llama 3.1 (LLM), Sentence Transformers, ChromaDB (RAG) |
 | **Storage**        | AWS S3 (PDFs), ChromaDB (vectors)                           |
 | **Deployment**     | Google Cloud Run (backend), Vercel (frontend)               |
 | **PDF Generation** | ReportLab                                                   |
@@ -174,7 +160,7 @@ Generate professional, audit-ready compliance certificates in the exact format r
 
 ## System Architecture
 
-![System Architecture](docs/architecture.png)
+<img src="https://res.cloudinary.com/ddtpuif2p/image/upload/v1768409719/architecture_u7pd80.png" height="350" alt="System Architecture">
 
 _How the components work together to transform legal agreements into automated compliance._
 
@@ -328,4 +314,4 @@ Built with ❤️ for the LMA Edge Hackathon 2026
 
 ---
 
-_Reimagining how loans are monitored—one covenant at a time._
+_Reimagining how loans are monitored._
