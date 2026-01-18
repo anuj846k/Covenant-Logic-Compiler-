@@ -173,7 +173,7 @@ export default function Home() {
                       Start Compiling <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
                   </Link>
-                  <Link href="/demo">
+                  <Link href="https://www.youtube.com/watch?v=FyMN-1vFjV0" target="_blank" rel="noopener noreferrer">
                     <Button
                       variant="outline"
                       size="lg"
